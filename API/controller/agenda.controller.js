@@ -8,8 +8,9 @@ const addAgenda = catchAsync((req, res) => {
     const activity = req.body.activity
     const startTime = new Date(req.body.startTime)
     const endTime = new Date(req.body.endTime)
-
-    if (startTime.getTime < endTime.getTime) {
+    console.log(startTime)
+    console.log(endTime)
+    if (startTime.getTime() < endTime.getTime()) {
         Activity.findOne({activity, startTime, endTime})
             .then((exist) => {
                 if(!exist){
@@ -33,7 +34,7 @@ const addAgenda = catchAsync((req, res) => {
 });
 
 const putInformation = catchAsync((req, res) => {
-    const id = req.param.id
+    const id = req.params.id
     const activity = req.body.activity
     const startTime = new Date(req.body.startTime)
     const endTime = new Date(req.body.endTime)
@@ -72,7 +73,7 @@ const putInformation = catchAsync((req, res) => {
 });
 
 const getOneActivity = catchAsync((req, res) => {
-    const id = req.param.id
+    const id = req.params.id
     Activity.findById(id)
         .then((activity) => {
             res.status(200).json({ status: 200, result: activity })

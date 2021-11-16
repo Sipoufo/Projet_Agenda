@@ -1,4 +1,5 @@
 const express = require('express');
+const Joi = require('joi');
 const router = express.Router();
 const {AgendaController} = require("../controller/index")
 const {AgendaValidator} = require("../validator/index")
@@ -32,18 +33,18 @@ router
 
 router
     .route('/putActivity/:id')
-    .post(validate(AgendaValidator.putActivity), AgendaController.putInformation);
+    .put(validate(AgendaValidator.putActivity), AgendaController.putInformation);
     
 router
     .route('/getOneActivity/:id')
-    .post(validate(AgendaValidator.getOneActivity), AgendaController.getOneActivity);
+    .get(validate(AgendaValidator.getOneActivity), AgendaController.getOneActivity);
 
 router
-    .route('/getAllActivity/:id')
-    .post(AgendaController.getAllActivity);
+    .route('/getAllActivity')
+    .get(AgendaController.getAllActivity);
 
 router
     .route('/deleteOneActivity/:id')
-    .post(AgendaController.deletedActivity);
+    .delete(AgendaController.deletedActivity);
 
 module.exports = router
