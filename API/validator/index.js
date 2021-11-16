@@ -1,0 +1,1 @@
+module.exports.AgendaValidator = require('./agenda.Validator')
