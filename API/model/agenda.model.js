@@ -1,25 +1,34 @@
+const { number } = require('joi');
 const mongoose = require('mongoose')
 const model = mongoose.Schema
 var mongoosePaginate = require('mongoose-paginate-v2');
 
 const activitySchema = new model({
-        activity: {
-            type: String,
-            required: true
-        },
-        startTime: {
-            type: Date,
-            required: true,
-        },
-        endTime: {
-            type: Date,
-            required: true,
-        },
-    }, {
-        timestamps: { currentTime: () => new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() + 1, new Date().getMinutes(), new Date().getMilliseconds()) },
-    }
-
-)
+    Subject: {
+        type: String,
+        required: true
+    },
+    StartTime: {
+        type: Date,
+        required: true,
+    },
+    EndTime: {
+        type: Date,
+        required: true,
+    },
+    Priority: {
+        type: Number,
+        required: false,
+        default: null
+    },
+    Description: {
+        type: String,
+        required: false,
+        default: null
+    },
+}, {
+    timestamps: { currentTime: () => new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() + 1, new Date().getMinutes(), new Date().getMilliseconds()) },
+})
 
 activitySchema.plugin(mongoosePaginate);
 

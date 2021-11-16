@@ -5,16 +5,18 @@ const catchAsync = (fn) => (req, res, next) => {
 };
 
 const addAgenda = catchAsync((req, res) => {
-    const activity = req.body.activity
-    const startTime = new Date(req.body.startTime)
-    const endTime = new Date(req.body.endTime)
-    console.log(startTime)
-    console.log(endTime)
-    if (startTime.getTime() < endTime.getTime()) {
-        Activity.findOne({activity, startTime, endTime})
+    const Subject = req.body.Subject
+    const StartTime = new Date(req.body.StartTime)
+    const EndTime = new Date(req.body.EndTime)
+    const Priority = (req.body.Priority) ? req.body.Priority : null
+    const Description = (req.body.Description) ? req.body.Description : null
+    console.log(StartTime)
+    console.log(EndTime)
+    if (StartTime.getTime() < EndTime.getTime()) {
+        Activity.findOne({Subject, StartTime, EndTime})
             .then((exist) => {
                 if(!exist){
-                    Activity.create({activity, startTime, endTime})
+                    Activity.create({Subject, StartTime, EndTime, Priority, Description})
                         .then( (activityHading) => {
                             res.status(200).json({ status: 200, result: activityHading })
                         })
@@ -35,18 +37,20 @@ const addAgenda = catchAsync((req, res) => {
 
 const putInformation = catchAsync((req, res) => {
     const id = req.params.id
-    const activity = req.body.activity
-    const startTime = new Date(req.body.startTime)
-    const endTime = new Date(req.body.endTime)
+    const Subject = req.body.Subject
+    const StartTime = new Date(req.body.StartTime)
+    const EndTime = new Date(req.body.EndTime)
+    const Priority = (req.body.Priority) ? req.body.Priority : null
+    const Description = (req.body.Description) ? req.body.Description : null
 
     Activity.findById(id)
         .then( result => {
             if (result) {
-                if (startTime.getTime < endTime.getTime) {
-                    Activity.findOne({activity, startTime, endTime})
+                if (StartTime.getTime < EndTime.getTime) {
+                    Activity.findOne({Subject, StartTime, EndTime})
                         .then((exist) => {
                             if(exist){
-                                Activity.findByIdAndUpdate(id, {activity, startTime, endTime})
+                                Activity.findByIdAndUpdate(id, {Subject, StartTime, EndTime, Priority, Description})
                                     .then( (activityHading) => {
                                         res.status(200).json({ status: 200, result: activityHading })
                                     })

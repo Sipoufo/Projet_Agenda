@@ -9,9 +9,11 @@ const objectId = (value, helpers) => {
 
 const addActivity = {
     body: Joi.object().keys({
-        activity: Joi.string().required(),
-        startTime: Joi.date().required(),
-        endTime: Joi.date().required(),
+        Subject: Joi.string().required(),
+        StartTime: Joi.date().required(),
+        EndTime: Joi.date().required(),
+        Priority: Joi.number(),
+        Description: Joi.string(),
     })
 };
 
@@ -20,9 +22,11 @@ const putActivity = {
         id: Joi.custom(objectId).required()
     }),
     body: Joi.object().keys({
-        activity: Joi.string().required(),
-        startTime: Joi.date().required(),
-        endTime: Joi.date().required(),
+        Subject: Joi.string().required(),
+        StartTime: Joi.date().required(),
+        EndTime: Joi.date().required(),
+        Priority: Joi.number(),
+        Description: Joi.string(),
     })
 };
 
