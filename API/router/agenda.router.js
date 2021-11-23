@@ -29,7 +29,7 @@ const validate = (schema) => (req, res, next) => {
 
 router
     .route('/addActivity')
-    .post(validate(AgendaValidator.addActivity), AgendaController.addAgenda);
+    .post(AgendaController.addAgenda);
 
 router
     .route('/putActivity/:id')

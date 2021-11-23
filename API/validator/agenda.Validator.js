@@ -14,6 +14,7 @@ const addActivity = {
         EndTime: Joi.date().required(),
         Priority: Joi.number(),
         Description: Joi.string(),
+        Location: Joi.string(),
     })
 };
 
@@ -27,6 +28,7 @@ const putActivity = {
         EndTime: Joi.date().required(),
         Priority: Joi.number(),
         Description: Joi.string(),
+        Location: Joi.string(),
     })
 };
 

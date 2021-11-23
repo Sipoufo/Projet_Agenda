@@ -8,6 +8,10 @@ const activitySchema = new model({
         type: String,
         required: true
     },
+    Location: {
+        type: String,
+        required: true
+    },
     StartTime: {
         type: Date,
         required: true,
