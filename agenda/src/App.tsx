@@ -43,10 +43,10 @@ class App extends React.Component<{}, any, any> {
           this.state.firstData.push(dataF);
         }
         this.setState({dataAgenda: this.state.firstData, isFetching: false})
-        console.log(this.state.dataAgenda)
+        // console.log(this.state.dataAgenda)
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
         this.setState({...this.state, isFetching: false});
       }
     )
@@ -68,15 +68,17 @@ class App extends React.Component<{}, any, any> {
         };
         fetch("http://localhost:5000/agenda/addActivity", requestOptions)
           .then(result => {
-            console.log(result);
+            // console.log(result);
           })
-          .catch(error => console.log('error', error));
+          .catch(
+            // error => console.log('error', error)
+          );
       }
       window.location.reload();
     }
     
     if (args.requestType === 'eventChanged') {
-      console.log(args.changedRecords)
+      // console.log(args.changedRecords)
       const data = args.changedRecords;
       for (let i = 0; i < data.length; i++) {
         requestOptions = {
@@ -86,9 +88,11 @@ class App extends React.Component<{}, any, any> {
         };
         fetch(`http://localhost:5000/agenda/putActivity`, requestOptions)
           .then(result => {
-            console.log("res",result);
+            // console.log("res",result);
           })
-          .catch(error => console.log('error', error));
+          .catch(
+            // error => console.log('error', error)
+          );
       }
       window.location.reload();
     }
@@ -102,14 +106,17 @@ class App extends React.Component<{}, any, any> {
         };
         fetch(`http://localhost:5000/agenda/deleteOneActivity/${id}`,requestOptions)
           .then(result => {
-            console.log("res",result);
+            // console.log("res",result);
           })
-          .catch(error => console.log('error', error));
+          .catch(
+            // error => console.log('error', error)
+          );
       }
       window.location.reload();
     }
   }
 
+  // if the user want oro not to have a event which take all time
   showDatetimeAtt(): void {
     this.setState({ showDateTime: !this.state.showDateTime});
     const inputStart = document.getElementById('start');
@@ -148,8 +155,12 @@ class App extends React.Component<{}, any, any> {
     };
 
     fetch("http://localhost:5000/agenda/addActivity", requestOptions)
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+      .then(result => {
+        // console.log(result);
+      })
+      .catch(
+        // error => console.log('error', error)
+      );
   }
 
   render() {
