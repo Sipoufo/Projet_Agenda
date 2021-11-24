@@ -10,7 +10,7 @@ const activitySchema = new model({
     },
     Location: {
         type: String,
-        required: true
+        required: false
     },
     StartTime: {
         type: Date,
@@ -26,6 +26,16 @@ const activitySchema = new model({
         default: null
     },
     Description: {
+        type: String,
+        required: false,
+        default: null
+    },
+    IsAllDay: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    RecurrenceRule: {
         type: String,
         required: false,
         default: null

@@ -13,6 +13,8 @@ const pick = (object, keys) => {
         return obj;
     }, {});
 };
+
+// Use for check one by one the validation of entry
 const validate = (schema) => (req, res, next) => {
     const validSchema = pick(schema, ['params', 'query', 'body']);
     const object = pick(req, Object.keys(validSchema));
@@ -32,8 +34,8 @@ router
     .post(AgendaController.addAgenda);
 
 router
-    .route('/putActivity/:id')
-    .put(validate(AgendaValidator.putActivity), AgendaController.putInformation);
+    .route('/putActivity')
+    .put(AgendaController.putInformation);
     
 router
     .route('/getOneActivity/:id')

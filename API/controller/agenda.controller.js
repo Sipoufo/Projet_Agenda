@@ -1,11 +1,12 @@
-const {Activity} = require('../model/index')
+const {Activity} = require('../model/index');
+var mongoose = require('mongoose');
 
 const catchAsync = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch((err) => next(err));
 };
 
+// Function for add the event agenda to the BDD
 const addAgenda = catchAsync((req, res) => {
-    console.log(req.body);
     const Subject = req.body.Subject
     const StartTime = new Date(req.body.StartTime)
     const EndTime = new Date(req.body.EndTime)
@@ -37,8 +38,9 @@ const addAgenda = catchAsync((req, res) => {
     }
 });
 
+// Function for put the event agenda to the BDD
 const putInformation = catchAsync((req, res) => {
-    const id = req.params.id
+    const id = req.body.ident;
     const Subject = req.body.Subject
     const StartTime = new Date(req.body.StartTime)
     const EndTime = new Date(req.body.EndTime)
@@ -48,17 +50,18 @@ const putInformation = catchAsync((req, res) => {
     Activity.findById(id)
         .then( result => {
             if (result) {
-                if (StartTime.getTime < EndTime.getTime) {
+                if (StartTime.getTime() < EndTime.getTime()) {
                     Activity.findOne({Subject, StartTime, EndTime})
-                        .then((exist) => {
-                            if(exist){
+                    .then((exist) => {
+                            console.log(exist)
+                            if(!exist){
                                 Activity.findByIdAndUpdate(id, {Subject, StartTime, EndTime, Priority, Description})
-                                    .then( (activityHading) => {
-                                        res.status(200).json({ status: 200, result: activityHading })
-                                    })
-                                    .catch((err) => {
-                                        console.log(err)
-                                    })
+                                .then( (activityHading) => {
+                                    res.status(200).json({ status: 200, result: activityHading })
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
                             }else {
                                 res.status(500).json({ status: 500, error: "This activity don't exist" })
                             }
@@ -68,9 +71,11 @@ const putInformation = catchAsync((req, res) => {
                         })
                 } else {
                     res.status(500).json({ status: 500, error: "The start date must be less than the end date" })
+                    console.log("The start date must be less than the end date");
                 }
             } else {
                 res.status(500).json({ status: 500, error: "This activity don't exist" })
+                console.log("This activity don't exist");
             }
         })
         .catch((err) => {
@@ -78,6 +83,7 @@ const putInformation = catchAsync((req, res) => {
         })
 });
 
+// Function for get the event agenda to the BDD
 const getOneActivity = catchAsync((req, res) => {
     const id = req.params.id
     Activity.findById(id)
@@ -89,8 +95,10 @@ const getOneActivity = catchAsync((req, res) => {
         })
 });
 
+// Function for delete the event agenda to the BDD
 const deletedActivity = catchAsync((req, res) => {
-    const id = req.param.id
+    const id = req.params.id
+    console.log(req.params)
     Activity.findById(id)
         .then((activity) => {
             if(activity){
@@ -110,6 +118,7 @@ const deletedActivity = catchAsync((req, res) => {
         })
 });
 
+// Function for all the events agenda to the BDD
 const getAllActivity = catchAsync((req, res) => {
     Activity.find()
         .then((activity) => {

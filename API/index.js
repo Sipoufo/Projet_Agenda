@@ -9,6 +9,7 @@ const httpStatus = require('http-status');
 dotenv.config({ path: './.env' })
 const PORT = process.env.PORT
 
+// Use for capture a error
 class ApiError extends Error {
     constructor(statusCode, message, isOperational = true, stack = '') {
         super(message);
@@ -22,6 +23,7 @@ class ApiError extends Error {
     }
 }
 
+// Connection to BDD
 mongoose.connect(process.env.DATABASE_URL)
 .then(() => console.log('MongoDB connection established.'))
 .catch((error) => console.error("MongoDB connection failed:", error.message))
@@ -48,8 +50,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     let error = err;
     if (!(error instanceof ApiError)) {
-        const statusCode =
-            error.statusCode || error instanceof mongoose.Error ? httpStatus.BAD_REQUEST : httpStatus.INTERNAL_SERVER_ERROR;
+        const statusCode = error.statusCode || error instanceof mongoose.Error ? httpStatus.BAD_REQUEST : httpStatus.INTERNAL_SERVER_ERROR;
         const message = error.message || httpStatus[statusCode];
         error = new ApiError(statusCode, message, false, err.stack);
     }

@@ -19,10 +19,8 @@ const addActivity = {
 };
 
 const putActivity = {
-    params: Joi.object().keys({
-        id: Joi.custom(objectId).required()
-    }),
     body: Joi.object().keys({
+        ident: Joi.custom(objectId).required(),
         Subject: Joi.string().required(),
         StartTime: Joi.date().required(),
         EndTime: Joi.date().required(),
@@ -34,13 +32,13 @@ const putActivity = {
 
 const getOneActivity = {
     params: Joi.object().keys({
-        id: Joi.custom(objectId).required()
+        id: Joi.custom(objectId).required(),
     })
 };
 
 const deletedActivity = {
     params: Joi.object().keys({
-        id: Joi.custom(objectId).required()
+        id: Joi.custom(objectId).required(),
     })
 };
 

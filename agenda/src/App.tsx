@@ -5,6 +5,7 @@ import {Modal} from './components/addEvent';
 import { Form, Row, Button } from 'react-bootstrap';
 
 class App extends React.Component<{}, any, any> {
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -17,6 +18,7 @@ class App extends React.Component<{}, any, any> {
       EndTime: new Date(),
       Description: "",
     };
+
   }
 
   // toggleModal = () => this.setState({ isModalOpen: !this.state.isModalOpen});
@@ -27,10 +29,11 @@ class App extends React.Component<{}, any, any> {
       .then(res => res.json())
       .then((data): void => {
           console.log(data);
-          let dataF: {id: number, Subject: string, StartTime: Date, EndTime:Date};
+          let dataF: {id: number, Subject: string, StartTime: Date, EndTime:Date, ident: any};
           for (let i = 0; i < data.result.length; i++) {
             dataF = {
-              id: i+1, 
+              id: i+1,
+              ident: data.result[i]._id, 
               Subject: data.result[i].Subject,
               StartTime: new Date(data.result[i].StartTime), 
               EndTime: new Date(data.result[i].EndTime)
@@ -48,7 +51,58 @@ class App extends React.Component<{}, any, any> {
   }
 
   create(args: any): void {
-    console.log(`add${args}`);
+    // const data = JSON.stringify(args.addedRecords);
+    var myHeaders = new Headers();
+    var requestOptions;
+    myHeaders.append("Content-Type", "application/json");
+    
+    if (args.requestType === 'eventCreated') {
+      const data = args.addedRecords;
+      for (let i = 0; i < data.length; i++) {
+        requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: JSON.stringify(data[i]),
+        };
+        fetch("http://localhost:5000/agenda/addActivity", requestOptions)
+          .then(result => {
+            console.log(result);
+          })
+          .catch(error => console.log('error', error));
+      }
+    }
+    
+    if (args.requestType === 'eventChanged') {
+      console.log(args.changedRecords)
+      const data = args.changedRecords;
+      for (let i = 0; i < data.length; i++) {
+        requestOptions = {
+          method: 'PUT',
+          headers: myHeaders,
+          body: JSON.stringify(data[i]),
+        };
+        fetch(`http://localhost:5000/agenda/putActivity`, requestOptions)
+          .then(result => {
+            console.log("res",result);
+          })
+          .catch(error => console.log('error', error));
+      }
+    }
+    if(args.requestType === 'eventRemoved') {
+      const data = args.deletedRecords;
+      for (let i = 0; i < data.length; i++) {
+        const id = data[i].ident;
+        requestOptions = {
+          method: 'DELETE',
+          headers: myHeaders,
+        };
+        fetch(`http://localhost:5000/agenda/deleteOneActivity/${id}`,requestOptions)
+          .then(result => {
+            console.log("res",result);
+          })
+          .catch(error => console.log('error', error));
+      }
+    }
   }
 
   showDatetimeAtt(): void {
@@ -137,7 +191,7 @@ class App extends React.Component<{}, any, any> {
           </Modal>
         </div>
         <div>
-          <ScheduleComponent currentView="Month" selectedDate= {new Date()} allowMultiDrag={true} eventSettings={ { dataSource: this.state.dataAgenda } } dragStop={this.create.bind(this)} >
+          <ScheduleComponent currentView="Month" selectedDate= {new Date()} allowMultiDrag={true} eventSettings={ { dataSource: this.state.dataAgenda } } actionComplete={this.create.bind(this)} >
             <ViewsDirective>
               <ViewDirective option="Day" interval={3} />
               <ViewDirective option="Week"/>
