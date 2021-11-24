@@ -9,9 +9,11 @@ class App extends React.Component<{}, any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
+      isFetching: false,
       isModalOpen: false,
       showDateTime: false,
       dataAgenda: [],
+      firstData: [],
       Subject: "",
       Location: "",
       StartTime: new Date(),
@@ -25,32 +27,32 @@ class App extends React.Component<{}, any, any> {
   // dataAgenda: Object[] = []
 
   componentDidMount() {
+    this.setState({...this.state, isFetching: true});
     fetch("http://localhost:5000/agenda/getAllActivity")
       .then(res => res.json())
       .then((data): void => {
-          console.log(data);
-          let dataF: {id: number, Subject: string, StartTime: Date, EndTime:Date, ident: any};
-          for (let i = 0; i < data.result.length; i++) {
-            dataF = {
-              id: i+1,
-              ident: data.result[i]._id, 
-              Subject: data.result[i].Subject,
-              StartTime: new Date(data.result[i].StartTime), 
-              EndTime: new Date(data.result[i].EndTime)
-            }
-            this.state.dataAgenda.push(dataF);
+        let dataF: {id: number, Subject: string, StartTime: Date, EndTime:Date, ident: any};
+        for (let i = 0; i < data.result.length; i++) {
+          dataF = {
+            id: i+1,
+            ident: data.result[i]._id, 
+            Subject: data.result[i].Subject,
+            StartTime: new Date(data.result[i].StartTime), 
+            EndTime: new Date(data.result[i].EndTime)
           }
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
+          this.state.firstData.push(dataF);
         }
-      )
+        this.setState({dataAgenda: this.state.firstData, isFetching: false})
+        console.log(this.state.dataAgenda)
+      },
+      (error) => {
+        console.log(error);
+        this.setState({...this.state, isFetching: false});
+      }
+    )
   }
 
-  // 
+  // Method use for CRUD 
   EventAction(args: any): void {
     var myHeaders = new Headers();
     var requestOptions;
@@ -70,6 +72,7 @@ class App extends React.Component<{}, any, any> {
           })
           .catch(error => console.log('error', error));
       }
+      window.location.reload();
     }
     
     if (args.requestType === 'eventChanged') {
@@ -87,6 +90,7 @@ class App extends React.Component<{}, any, any> {
           })
           .catch(error => console.log('error', error));
       }
+      window.location.reload();
     }
     if(args.requestType === 'eventRemoved') {
       const data = args.deletedRecords;
@@ -102,6 +106,7 @@ class App extends React.Component<{}, any, any> {
           })
           .catch(error => console.log('error', error));
       }
+      window.location.reload();
     }
   }
 
@@ -123,6 +128,7 @@ class App extends React.Component<{}, any, any> {
     }
   }
 
+  // Method use for create a event to agenda.
   onSubmitForm(): void {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
