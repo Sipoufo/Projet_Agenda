@@ -50,8 +50,8 @@ class App extends React.Component<{}, any, any> {
       )
   }
 
-  create(args: any): void {
-    // const data = JSON.stringify(args.addedRecords);
+  // 
+  EventAction(args: any): void {
     var myHeaders = new Headers();
     var requestOptions;
     myHeaders.append("Content-Type", "application/json");
@@ -191,7 +191,7 @@ class App extends React.Component<{}, any, any> {
           </Modal>
         </div>
         <div>
-          <ScheduleComponent currentView="Month" selectedDate= {new Date()} allowMultiDrag={true} eventSettings={ { dataSource: this.state.dataAgenda } } actionComplete={this.create.bind(this)} >
+          <ScheduleComponent currentView="Month" selectedDate= {new Date()} allowMultiDrag={true} eventSettings={ { dataSource: this.state.dataAgenda } } actionComplete={this.EventAction.bind(this)} >
             <ViewsDirective>
               <ViewDirective option="Day" interval={3} />
               <ViewDirective option="Week"/>
