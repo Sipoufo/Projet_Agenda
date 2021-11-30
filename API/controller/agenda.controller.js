@@ -7,10 +7,12 @@ const catchAsync = (fn) => (req, res, next) => {
 
 // Function for add the event agenda to the BDD
 const addAgenda = catchAsync((req, res) => {
+    console.log(req.body);
     const Subject = req.body.Subject
     const StartTime = new Date(req.body.StartTime)
     const EndTime = new Date(req.body.EndTime)
     const Priority = (req.body.Priority) ? req.body.Priority : null
+    const Participant = req.body.Participant
     const Description = (req.body.Description) ? req.body.Description : null
     const Location = (req.body.Location) ? req.body.Location : null
     console.log(StartTime)
@@ -20,7 +22,13 @@ const addAgenda = catchAsync((req, res) => {
             .then((exist) => {
                 if(!exist){
                     Activity.create({Subject, StartTime, EndTime, Priority, Description, Location})
-                        .then( (activityHading) => {
+                        .then(async (activityHading) => {
+                            if(Participant.length > 0) {
+                                for (let i = 0; i < Participant.length; i++) {
+                                    console.log(Participant[i])
+                                    await Activity.findByIdAndUpdate(activityHading._id, { $push: {Participant: Participant[i]} })
+                                }
+                            }
                             res.status(200).json({ status: 200, result: activityHading })
                         })
                         .catch((err) => {

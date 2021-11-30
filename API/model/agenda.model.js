@@ -30,6 +30,10 @@ const activitySchema = new model({
         required: false,
         default: null
     },
+    Participant: [{
+        type: String,
+        required: false,
+    }],
     IsAllDay: {
         type: Boolean,
         required: true,

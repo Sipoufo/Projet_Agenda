@@ -14,11 +14,13 @@ class App extends React.Component<{}, any, any> {
       showDateTime: false,
       dataAgenda: [],
       firstData: [],
+      Participant: [],
       Subject: "",
       Location: "",
       StartTime: new Date(),
       EndTime: new Date(),
       Description: "",
+      namePart: "",
     };
 
   }
@@ -135,6 +137,37 @@ class App extends React.Component<{}, any, any> {
     }
   }
 
+  bap(): void {
+    const bap = document.getElementById('bap');
+    const b1 = document.getElementById('b1');
+    const b2 = document.getElementById('b2');
+
+    bap?.setAttribute("hidden", "");
+    b1?.removeAttribute("hidden");
+    b2?.removeAttribute("hidden");
+  }
+
+  
+  addParticipant(): void {
+    var tab = this.state.Participant;
+    var isadded = false
+    if(this.state.namePart.length > 0) {
+      for (let i = 0; i < tab.length; i++) {
+        if(this.state.namePart === tab[i]) {
+          isadded = true
+        }
+      }
+      if(!isadded) {
+        tab.push(this.state.namePart);
+      } else {
+        alert("This email exist");
+      }
+    } else {
+      alert("Please enter the email");
+    }
+    alert(tab);
+  }
+
   // Method use for create a event to agenda.
   onSubmitForm(): void {
     var myHeaders = new Headers();
@@ -145,6 +178,7 @@ class App extends React.Component<{}, any, any> {
       "Location": this.state.Location,
       "StartTime": this.state.StartTime,
       "EndTime": this.state.EndTime,
+      "Participant": this.state.Participant,
       "Description": this.state.Description,
     });
 
@@ -171,7 +205,7 @@ class App extends React.Component<{}, any, any> {
             Add Event
           </button>
           <Modal title={'Add Event'} isOpen={this.state.isModalOpen} onClose={() => this.setState({ isModalOpen: !this.state.isModalOpen})} >
-          <Form onSubmit={() => {this.onSubmitForm()}}>
+          <Form id="form" onSubmit={() => {this.onSubmitForm()}}>
             <Row className="mb-3">
               <Form.Group className="col-md-6" controlId="formGridEmail">
                 <Form.Label>Title</Form.Label>
@@ -197,6 +231,15 @@ class App extends React.Component<{}, any, any> {
             <Form.Group className="mb-3" id="formGridCheckbox">
               <Form.Check type="checkbox" label="All day" onClick={() => this.showDatetimeAtt()} />
             </Form.Group>
+            <Form.Group className="col-md-9" id="b1" controlId="formGridEmail" hidden>
+              <Form.Control id="addPart" type="text" placeholder="Email of participant" onChange={(e) => {this.setState({ namePart: e.target.value})}} />
+            </Form.Group>
+            <Form.Group className="col-md-3" id="b2" controlId="formGridEmail" hidden>
+              <Button onClick={() => this.addParticipant()}>Add Part</Button>
+            </Form.Group>
+            <Form.Group className="col-md-12" id="bap" controlId="formGridEmail">
+              <Button onClick={() => this.bap()}>Add Participant</Button>
+            </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
               <Form.Label>Description</Form.Label>
               <Form.Control className="fm" as="textarea" onChange={(e) => {this.setState({ Description: e.target.value})}} rows={3} required />
@@ -207,9 +250,9 @@ class App extends React.Component<{}, any, any> {
           </Form>
           </Modal>
         </div>
-        <div>
-          <ScheduleComponent currentView="Month" selectedDate= {new Date()} allowMultiDrag={true} eventSettings={ { dataSource: this.state.dataAgenda } } actionComplete={this.EventAction.bind(this)} >
-            <ViewsDirective>
+          <div>
+            <ScheduleComponent currentView="Month" selectedDate= {new Date()} allowMultiDrag={true} eventSettings={ { dataSource: this.state.dataAgenda } } actionComplete={this.EventAction.bind(this)} >
+              <ViewsDirective>
               <ViewDirective option="Day" interval={3} />
               <ViewDirective option="Week"/>
               <ViewDirective option="Month"/>
